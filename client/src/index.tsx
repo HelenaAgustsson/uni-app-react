@@ -2,10 +2,11 @@ import ReactDOM from 'react-dom';
 import * as React from 'react';
 import { Component } from 'react-simplified';
 import { Card, Row, Column, Form, Button } from './widgets';
-import taskService, { Task } from './task-service';
+import taskService, { Task, Student } from './task-service';
 
 class TaskList extends Component {
   tasks: Task[] = [];
+  students: Student[] = [];
 
   render() {
     return (
@@ -14,35 +15,11 @@ class TaskList extends Component {
           <Column>Title</Column>
           <Column>Done</Column>
         </Row>
-
-        {this.tasks.map((task) => (
-          <Row key={task.id}>
-            <Column>{task.title}</Column>
-            <Column>{task.id}</Column>
-            <Column>
-              {' '}
-              <Form.Checkbox
-                checked={task.done}
-                onChange={() => {
-                  taskService
-                    .update({ id: task.id, title: task.title, done: !task.done })
-                    .then(() => this.mounted()); // Update tasks if success
-                }}
-              ></Form.Checkbox>
-            </Column>
-            <Column>
-              <Button.Danger
-                small
-                onClick={() => {
-                  taskService.delete(task.id).then(() => {
-                    // Reloads the tasks in the Tasks component
-                    this.mounted(); // .? meaning: call TaskList.instance().mounted() if TaskList.instance() does not return null
-                  });
-                }}
-              >
-                x
-              </Button.Danger>
-            </Column>
+        {this.students.map((student) => (
+          <Row key={student.id}>
+            <Column>{student.name}</Column>
+            <Column>{student.id}</Column>
+            <Column> </Column>
           </Row>
         ))}
       </Card>
@@ -50,50 +27,13 @@ class TaskList extends Component {
   }
 
   mounted() {
-    taskService.getAll().then((tasks) => (this.tasks = tasks));
-  }
-}
-
-class TaskNew extends Component {
-  title = '';
-  id = 0;
-
-  render() {
-    return (
-      <Card title="Ny task">
-        
-        <Row>
-          <Column width={1}>
-            <Form.Label>Title:</Form.Label>
-          </Column>
-          <Column width={4}>
-            <Form.Input
-              type="text"
-              value={this.title}
-              onChange={(event) => (this.title = event.currentTarget.value)}
-            />
-          </Column>
-        </Row>
-        <Button.Success
-          onClick={() => {
-            taskService.create(this.title).then(() => {
-              // Reloads the tasks in the Tasks component
-              TaskList.instance()?.mounted(); // .? meaning: call TaskList.instance().mounted() if TaskList.instance() does not return null
-              this.title = '';
-            });
-          }}
-        >
-          Create
-        </Button.Success>
-      </Card>
-    );
+    taskService.getAll().then((students) => (this.students = students));
   }
 }
 
 ReactDOM.render(
   <>
     <TaskList />
-    <TaskNew />
   </>,
   document.getElementById('root')
 );
