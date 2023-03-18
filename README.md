@@ -1,4 +1,8 @@
-# Client - server example
+# React Webapp with Typescript
+
+This web app was built for the module INFT2002 - Web development at NTNU.
+
+
 
 ## Create databases
 
